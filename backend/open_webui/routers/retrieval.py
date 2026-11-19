@@ -103,6 +103,7 @@ from open_webui.retrieval.web.main import SearchResult
 from open_webui.retrieval.web.microsoft_web_iq import search_microsoft_web_iq
 from open_webui.retrieval.web.mojeek import search_mojeek
 from open_webui.retrieval.web.ollama import search_ollama_cloud
+from open_webui.retrieval.web.parallel import search_parallel
 from open_webui.retrieval.web.perplexity import search_perplexity
 from open_webui.retrieval.web.perplexity_search import search_perplexity_search
 from open_webui.retrieval.web.searchapi import search_searchapi
@@ -328,6 +329,7 @@ RETRIEVAL_CONFIG_KEYS = {
     'MISTRAL_OCR_USE_BASE64': 'rag.mistral_ocr_use_base64',
     'MOJEEK_SEARCH_API_KEY': 'web.search.mojeek_search_api_key',
     'OLLAMA_CLOUD_WEB_SEARCH_API_KEY': 'web.search.ollama_cloud_api_key',
+    'PARALLEL_API_KEY': 'web.search.parallel_api_key',
     'PADDLEOCR_VL_BASE_URL': 'rag.paddleocr_vl_base_url',
     'PADDLEOCR_VL_TOKEN': 'rag.paddleocr_vl_token',
     'PDF_EXTRACT_IMAGES': 'rag.pdf_extract_images',
@@ -740,6 +742,7 @@ async def get_rag_config(request: Request, user=Depends(get_admin_user)):
             'BING_SEARCH_V7_SUBSCRIPTION_KEY': config['web.search.bing_search_v7_subscription_key'],
             'EXA_API_KEY': config['web.search.exa_api_key'],
             'EXA_MAX_CONTENT_LENGTH': config['web.search.exa_max_content_length'],
+            'PARALLEL_API_KEY': config['web.search.parallel_api_key'],
             'PERPLEXITY_API_KEY': config['web.search.perplexity_api_key'],
             'PERPLEXITY_MODEL': config['web.search.perplexity_model'],
             'PERPLEXITY_SEARCH_CONTEXT_USAGE': config['web.search.perplexity_search_context_usage'],
@@ -824,6 +827,7 @@ class WebConfig(BaseModel):
     BING_SEARCH_V7_SUBSCRIPTION_KEY: str | None = None
     EXA_API_KEY: str | None = None
     EXA_MAX_CONTENT_LENGTH: int | None = Field(default=None, gt=0, strict=True)
+    PARALLEL_API_KEY: str | None = None
     PERPLEXITY_API_KEY: str | None = None
     PERPLEXITY_MODEL: str | None = None
     PERPLEXITY_SEARCH_CONTEXT_USAGE: str | None = None
@@ -1204,6 +1208,7 @@ async def update_rag_config(request: Request, form_data: ConfigForm, user=Depend
             'BING_SEARCH_V7_SUBSCRIPTION_KEY': config['web.search.bing_search_v7_subscription_key'],
             'EXA_API_KEY': config['web.search.exa_api_key'],
             'EXA_MAX_CONTENT_LENGTH': config['web.search.exa_max_content_length'],
+            'PARALLEL_API_KEY': config['web.search.parallel_api_key'],
             'PERPLEXITY_API_KEY': config['web.search.perplexity_api_key'],
             'PERPLEXITY_MODEL': config['web.search.perplexity_model'],
             'PERPLEXITY_SEARCH_CONTEXT_USAGE': config['web.search.perplexity_search_context_usage'],
@@ -2489,6 +2494,17 @@ async def search_web(
             )
         else:
             raise Exception('No EXA_API_KEY found in environment variables')
+    elif engine == 'parallel':
+        if config['web.search.parallel_api_key']:
+            return await asyncio.to_thread(
+                search_parallel,
+                config['web.search.parallel_api_key'],
+                query,
+                config['web.search.result_count'],
+                config['web.search.domain.filter_list'],
+            )
+        else:
+            raise Exception('No PARALLEL_API_KEY found in environment variables')
     elif engine == 'searchapi':
         if config['web.search.searchapi_api_key']:
             return await asyncio.to_thread(

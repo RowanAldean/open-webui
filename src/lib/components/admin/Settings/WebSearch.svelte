@@ -41,6 +41,7 @@
 		'jina',
 		'bing',
 		'exa',
+		'parallel',
 		'perplexity',
 		'microsoft_web_iq',
 		'sougou',
@@ -107,6 +108,7 @@
 		),
 		EXA_API_KEY: $i18n.t('settings.admin.web.exaApiKey.label'),
 		EXA_MAX_CONTENT_LENGTH: $i18n.t('settings.admin.web.maxContentLength.label'),
+		PARALLEL_API_KEY: $i18n.t('settings.admin.web.parallelApiKey.label'),
 		PERPLEXITY_MODEL: $i18n.t('settings.admin.web.perplexityModel.label'),
 		PERPLEXITY_SEARCH_CONTEXT_USAGE: $i18n.t(
 			'settings.admin.web.perplexitySearchContextUsage.label'
@@ -170,6 +172,7 @@
 		'JINA_API_KEY',
 		'BING_SEARCH_V7_SUBSCRIPTION_KEY',
 		'EXA_API_KEY',
+		'PARALLEL_API_KEY',
 		'MICROSOFT_WEB_IQ_API_KEY',
 		'SOUGOU_API_SID',
 		'SOUGOU_API_SK',
@@ -985,6 +988,20 @@
 									bind:value={webConfig.EXA_MAX_CONTENT_LENGTH}
 								/>
 							</AdminSettingField>
+						</div>
+					{:else if webConfig.WEB_SEARCH_ENGINE === 'parallel'}
+						<div class="mb-2.5 flex w-full flex-col">
+							<div>
+								<div class=" self-center text-xs text-gray-600 dark:text-gray-400 mb-1">
+									{$i18n.t('settings.admin.web.parallelApiKey.label')}
+								</div>
+
+								<SensitiveInput
+									variant="settings"
+									placeholder={$i18n.t('Enter Parallel API Key')}
+									bind:value={webConfig.PARALLEL_API_KEY}
+								/>
+							</div>
 						</div>
 					{:else if webConfig.WEB_SEARCH_ENGINE === 'perplexity'}
 						<div class="mb-2.5 flex w-full flex-col">

@@ -1283,6 +1283,8 @@ EXA_MAX_CONTENT_LENGTH = int(os.environ['EXA_MAX_CONTENT_LENGTH']) if os.getenv(
 if EXA_MAX_CONTENT_LENGTH is not None and EXA_MAX_CONTENT_LENGTH <= 0:
     raise ValueError('EXA_MAX_CONTENT_LENGTH must be a positive integer or unset')
 
+PARALLEL_API_KEY = os.getenv('PARALLEL_API_KEY', '')
+
 PERPLEXITY_API_KEY = os.getenv('PERPLEXITY_API_KEY', '')
 
 PERPLEXITY_MODEL = os.getenv('PERPLEXITY_MODEL', 'sonar')
@@ -3149,6 +3151,7 @@ DEFAULT_CONFIG = {
     'web.search.azure_ai_search_index_name': AZURE_AI_SEARCH_INDEX_NAME,
     'web.search.exa_api_key': EXA_API_KEY,
     'web.search.exa_max_content_length': EXA_MAX_CONTENT_LENGTH,
+    'web.search.parallel_api_key': PARALLEL_API_KEY,
     'web.search.perplexity_api_key': PERPLEXITY_API_KEY,
     'web.search.perplexity_model': PERPLEXITY_MODEL,
     'web.search.perplexity_search_context_usage': PERPLEXITY_SEARCH_CONTEXT_USAGE,
