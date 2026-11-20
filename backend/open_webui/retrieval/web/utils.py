@@ -52,6 +52,7 @@ from open_webui.env import (
 )
 from open_webui.retrieval.loaders.external_web import ExternalWebLoader
 from open_webui.retrieval.loaders.microsoft_web_iq import MicrosoftWebIQLoader
+from open_webui.retrieval.loaders.parallel import ParallelLoader
 from open_webui.retrieval.loaders.tavily import TavilyLoader
 from open_webui.retrieval.web.firecrawl import scrape_firecrawl_url
 from open_webui.utils.misc import is_host_allowed, is_host_blocked
@@ -1264,6 +1265,11 @@ def get_web_loader(
         web_loader_args['api_key'] = cfg('web.search.exa_api_key')
         web_loader_args['timeout'] = web_loader_timeout
 
+    if engine == 'parallel':
+        WebLoaderClass = ParallelLoader
+        web_loader_args['api_key'] = cfg('web.search.parallel_api_key')
+        web_loader_args['timeout'] = web_loader_timeout
+
     if engine == 'microsoft_web_iq':
         WebLoaderClass = SafeMicrosoftWebIQLoader
         web_loader_args['api_base_url'] = cfg('web.search.microsoft_web_iq_api_base_url')
@@ -1293,5 +1299,5 @@ def get_web_loader(
     else:
         raise ValueError(
             f'Invalid WEB_LOADER_ENGINE: {engine}. '
-            "Please set it to 'safe_web', 'playwright', 'firecrawl', 'tavily', 'exa', 'external', or 'microsoft_web_iq'."
+            "Please set it to 'safe_web', 'playwright', 'firecrawl', 'tavily', 'exa', 'parallel', 'external', or 'microsoft_web_iq'."
         )

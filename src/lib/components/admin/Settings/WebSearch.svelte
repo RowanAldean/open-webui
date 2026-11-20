@@ -57,6 +57,7 @@
 		'firecrawl',
 		'tavily',
 		'exa',
+		'parallel',
 		'microsoft_web_iq',
 		'external'
 	];
@@ -1548,7 +1549,23 @@
 					{/if}
 				{/if}
 
-				{#if ['', 'safe_web', 'exa'].includes(webConfig.WEB_LOADER_ENGINE)}
+				{#if webConfig.WEB_LOADER_ENGINE === 'parallel'}
+					{#if webConfig.ENABLE_WEB_SEARCH && webConfig.WEB_SEARCH_ENGINE === 'parallel'}
+						<p class="text-xs text-gray-500 dark:text-gray-400">
+							{$i18n.t('Parallel search and web loading share the API key configured above.')}
+						</p>
+					{:else}
+						<AdminSettingField label={$i18n.t('settings.admin.web.parallelApiKey.label')}>
+							<SensitiveInput
+								variant="settings"
+								placeholder={$i18n.t('Enter Parallel API Key')}
+								bind:value={webConfig.PARALLEL_API_KEY}
+							/>
+						</AdminSettingField>
+					{/if}
+				{/if}
+
+				{#if ['', 'safe_web', 'exa', 'parallel'].includes(webConfig.WEB_LOADER_ENGINE)}
 					<AdminSettingField
 						label={$i18n.t('settings.admin.web.timeout.label')}
 						description={$i18n.t('settings.admin.web.timeout.description')}
